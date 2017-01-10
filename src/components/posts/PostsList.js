@@ -12,7 +12,7 @@ const PostsList = (props) => {
 						<p className="list-group-item-text">{post.body}</p>
 					</a>
 				);
-			})};
+			})}
 		</div>);
 };
 
