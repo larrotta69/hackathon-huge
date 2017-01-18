@@ -265,11 +265,3 @@ render(
 	,document.getElementById('app')
 )
 ```
-
-
-# My Doubts
-what is the super(props) method?
-
-Declarative programming
-
-Value - Default Value 
