@@ -1,5 +1,14 @@
 # React Tech break-fast
 
+## Run the project
+
+* Clone the repo `https://github.com/larrotta69/hackathon-huge.git`
+
+* Go to you are in the `huge-workshop` branch.
+* Run `npm install`
+* Then `npm start`
+ 
+
 ## First example
 #### Topics
 
@@ -202,15 +211,9 @@ this.handleSubmit  = e => {
 	const values = serializeForm(e.target, { hash: true })
 	console.log(values)
 }
-
 // Add the button tag to form
 <button>click</button>
 ```
-
-
-
-
-
 ### Switch to first and second example
 #### Topics
 
@@ -218,12 +221,54 @@ this.handleSubmit  = e => {
 * Routing
 
 #### Example
-* Layout page
+* Create App (Layout) Page
+
+```js
+class App extends React.Component {
+	render () {
+		return (
+			<div className="container">
+				{this.props.children}		
+			</div>
+		);
+	}
+}
+export default App;
+```
+* Render the HomePage inside the the new App wrapper
+
+```js
+render(
+	<App>
+		<HomePage data={data} />
+	</App>,
+	document.getElementById('app')
+)
+```
+* Import the Header and the Footer on the App layout, then use them
+
+```js
+import Header from './common/Header'
+import Footer from './common/Footer'
+```
+* Let's create a Router, then we can access to HomePage and FormPage
+
+```js
+render(
+	<Router history={browserHistory}>
+		<Route path="/" component={App}>
+			<IndexRoute component={() => <HomePage data={data}/>}/>
+			<Route path="/form" component={FormPage}/>
+		</Route>
+	</Router>
+	,document.getElementById('app')
+)
+```
 
 
 # My Doubts
-what is the super method?
+what is the super(props) method?
 
 Declarative programming
 
-Value - Defualt Value 
+Value - Default Value 

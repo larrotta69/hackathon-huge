@@ -1,13 +1,20 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'
 
-const stateLessMethod = () => {
-	console.log('daniel');
-};
 const Footer = () => {
 	return (
-		<footer>
-			<h1 onClick={stateLessMethod}>Hackathon footer goes here...</h1>
-		</footer>);
-};
+		<nav className="navbar">
+			<div className="container">
+				<ul className="nav navbar-nav">
+					<li className="active">
+						<a href="#">Footer</a>
+					</li>
+					<li>
+						<a href="#">Footer</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	)
+}
 
-export default Footer;
+export default Footer

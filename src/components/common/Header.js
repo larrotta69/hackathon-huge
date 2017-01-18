@@ -1,11 +1,24 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'
 
 const Header = (props) => {
 	return (
-		<header>
-			<h1>Hackaton header</h1>
-		</header>
-	);
-};
+		<nav className="navbar navbar-inverse navbar-fixed-top">
+			<div className="container">
+				<ul className="nav navbar-nav">
+					<li className="active">
+						<a href="#">Home</a>
+					</li>
+					<li>
+						<a href="#">Header</a>
+					</li>
+					<li>
+						<a href="#">Header</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
 
-export default Header;
+	)
+}
+
+export default Header
