@@ -4,10 +4,11 @@
 
 * Clone the repo `https://github.com/larrotta69/hackathon-huge.git`
 
-* Go to you are in the `huge-workshop` branch.
+* Go to `huge-workshop` branch, run `git checkout huge-workshop`
 * Run `npm install`
 * Then `npm start`
- 
+* Webpack will open a new tab in your browser
+*  You'll see the "Welcome to React WorkShop"
 
 ## First example
 #### Topics
@@ -144,7 +145,7 @@ componentDidMount() {
 componentWillMount(){
 	fetch('https://jsonplaceholder.typicode.com/posts')
 		.then(response => {
-			return response.json();
+			return response.json()
 		})
 		.then(data => {
 			console.log(data)
