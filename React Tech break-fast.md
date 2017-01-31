@@ -1,10 +1,11 @@
-# React Tech break-fast
+# React-Redux workshop
 
 ## Run the project
 
 * Clone the repo `https://github.com/larrotta69/hackathon-huge.git`
 
-* Go to `huge-workshop` branch, run `git checkout huge-workshop`
+* Go to `huge-workshop` branch, run `git checkout huge-workshop-redux`
+* Go to `hackathon-huge`
 * Run `npm install`
 * Then `npm start`
 * Webpack will open a new tab in your browser

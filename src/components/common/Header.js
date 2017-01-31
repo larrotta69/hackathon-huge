@@ -2,22 +2,14 @@ import React, { PropTypes } from 'react'
 
 const Header = (props) => {
 	return (
-		<nav className="navbar navbar-inverse navbar-fixed-top">
-			<div className="container">
-				<ul className="nav navbar-nav">
-					<li className="active">
-						<a href="#">Home</a>
-					</li>
-					<li>
-						<a href="#">Header</a>
-					</li>
-					<li>
-						<a href="#">Header</a>
-					</li>
-				</ul>
+		<div className="panel-heading">
+			<div className="panel-title">
+				<h5>
+					<span className="glyphicon glyphicon-shopping-cart"></span>
+					Shopping Cart
+				</h5>
 			</div>
-		</nav>
-
+		</div>
 	)
 }
 
