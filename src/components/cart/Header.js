@@ -5,8 +5,7 @@ const Header = (props) => {
 		<div className="panel-heading">
 			<div className="panel-title">
 				<h5>
-					<span className="glyphicon glyphicon-shopping-cart"></span>
-					Shopping Cart
+					{props.text}
 				</h5>
 			</div>
 		</div>
