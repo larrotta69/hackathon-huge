@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React, {PropTypes} from 'react'
 
 class FormPage extends React.Component {
 	render() {
@@ -37,8 +37,8 @@ class FormPage extends React.Component {
 					</p>
 				</fieldset>
 			</form>
-		</div>);
+		</div>)
 	}
 }
 
-export default FormPage;
+export default FormPage

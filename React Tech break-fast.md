@@ -14,9 +14,12 @@
 ## First example
 #### Topics
 
-* Props	
+* Props
 * Event Handlers
 * LiveCycle
+
+
+
 
 #### Example
 * Render of the component inside the DOM
@@ -34,7 +37,7 @@ class HomePage extends React.Component {
 					HomePage
 				</div>
 			</section>
-		);
+		)
 
 	}
 }
@@ -73,39 +76,48 @@ const data = {
 	]
 }
 
+export default data
+
+```
+
+```js
 render(
 	<HomePage data={data} />,
 	document.getElementById('app')
 )
 ```
 
-* Create the `HomePage` file, iterate over props, then render a list 
+* Create the `HomePage` file, iterate over props, then render a list
 
 ```js
 class HomePage extends React.Component {
 	render () {
-		const homePagePosts = this.props.data.posts
-		console.log(homePagePosts)
+		const { posts, appTitle } = this.props.data
+		console.log(posts)
 		return (
 			<section className="row">
-				<h1>{this.props.data.appTitle}</h1>
-				{homePagePosts.map((post, index) => {
-					return(
-						<div key={index} className="col-sm-12 col-xs-12 col-md-4 col-lg-3">
-							<div className="thumbnail bootsnipp-thumb">
-								<h4 className="list-group-item-heading">{post.title}</h4>
-								<p className="list-group-item-text">{post.body}</p>
-							</div>
-						</div>
-					)
-				})}
+				<h1>{appTitle}</h1>
+				{posts.map((post, index) => {
+                    return(
+                        <div key={index} className="col-sm-12 col-xs-12 col-md-4 col-lg-3">
+                            <div className="thumbnail bootsnipp-thumb">
+                                <h4 className="list-group-item-heading">{post.title}</h4>
+                                <p className="list-group-item-text">{post.body}</p>
+                            </div>
+                        </div>
+                    )
+                })}
 			</section>
 		)
-
 	}
 }
 
-export default HomePage;
+HomePage.propTypes = {
+	data: PropTypes.object,
+	appTitle: PropTypes.string
+}
+
+export default HomePage
 ```
 * Handling with events
 
@@ -164,7 +176,7 @@ componentWillMount(){
 
 ```js
 // 1. Inside constructor this.state = { posts: [] }
-// 2. Inside render const homePagePosts = this.state.posts
+// 2. Inside render const homePagePosts = this.state.posts || []
 // 3. Inside the Promise this.setState({posts: data})
 // 4. Remove props from index.js
 ```
@@ -185,35 +197,59 @@ this.state = {
 }
 // const { state } = this
 // defaultValue={state.billingName}
-``` 
+```
 
 * Update the checkbox, to set `sameAddress`
 
 ```js
-onChange={event => this.setState({ sameAddress: event.target.checked })}
+<input 
+	name="check" 
+	type="checkbox" 
+	onChange={event => this.setState({ sameAddress: event.target.checked })}/>
+	Same as billing
 ```
-
-* Set the `onChange` to update the inputs values
-
-```js
-onChange={event => this.setState({ billingName: event.target.value })}
-```
-
 * Set the values of the second inputs section
 
 ```js
 value={state.sameAddress ? state.billingName : state.shippingName}
 ```
 
-*  Serialize and send the data 
+* Set the `onChange` to update the inputs values
 
 ```js
-this.handleSubmit  = e => {
-	e.preventDefault()
-	const values = serializeForm(e.target, { hash: true })
-	console.log(values)
+onChange={event => this.setState({ billingName: event.target.value })}
+
+
+<input
+	type="text"
+	name="ShippingName"
+	value={state.sameAddress ? state.billingName : state.shippingName}
+	onChange={(event) => {
+		if (!state.sameAddress){
+			this.setState({ shippingName: event.target.value })
+		}
+	}}
+/>
+```
+* Add `serializeForm`
+
+```js
+import serializeForm from 'form-serialize'
+```
+
+
+*  Serialize and send the data
+
+```js
+handleSubmit(e) {
+    e.preventDefault()
+    const values = serializeForm(e.target, { hash: true })
+    console.log(values)
 }
+
 // Add the button tag to form
+//Add the onSubmit method
+<form onSubmit={this.handleSubmit}>
 <button>click</button>
 ```
 ### Switch to first and second example
@@ -252,10 +288,19 @@ render(
 ```js
 import Header from './common/Header'
 import Footer from './common/Footer'
+
+<div className="container">
+	<Header/>
+	{this.props.children}
+	<Footer/>
+</div>
 ```
 * Let's create a Router, then we can access to HomePage and FormPage
 
 ```js
+import {browserHistory, Router, Route, IndexRoute} from 'react-router'
+
+
 render(
 	<Router history={browserHistory}>
 		<Route path="/" component={App}>

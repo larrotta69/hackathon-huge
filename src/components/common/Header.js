@@ -5,14 +5,11 @@ const Header = (props) => {
 		<nav className="navbar navbar-inverse navbar-fixed-top">
 			<div className="container">
 				<ul className="nav navbar-nav">
-					<li className="active">
-						<a href="#">Home</a>
+					<li>
+						<a href="/">Home</a>
 					</li>
 					<li>
-						<a href="#">Header</a>
-					</li>
-					<li>
-						<a href="#">Header</a>
+						<a href="/form">Form</a>
 					</li>
 				</ul>
 			</div>
