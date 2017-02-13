@@ -40,7 +40,7 @@ class ShoppingCart extends React.Component {
 					<div className="row">
 						<div className="panel panel-info">
 							<Header/>
-								<App products = {productsData.products}/>
+								<App/>
 							<Footer/>
 						</div>
 					</div>

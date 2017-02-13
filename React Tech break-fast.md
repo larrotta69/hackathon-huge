@@ -207,11 +207,12 @@ return (
 ```
 
 ## Second Part
+
+#### Topics
 * Create reducers
 * Create action
 * Remove all the props on the products flows
 * Render data from the store
-
 
 * Create ProductReducer.js on the reducers folder
 
@@ -233,7 +234,7 @@ const cartProducts = (state = [], action) => {
 export default cartProducts
 ```
 
-* Add this new lines on the index.js file
+* Add this new lines on the index.js
 
 ```js
 import rootReducer from './reducers/index'
@@ -254,6 +255,19 @@ const defaultState = {
 }
 
 const store = createStore(rootReducer, defaultState, applyMiddleware(...middleware))
+
+
+return (
+	<div className="container">
+		<div className="row">
+			<div className="panel panel-info">
+				<Header/>
+					<App/>
+				<Footer/>
+			</div>
+		</div>
+	</div>
+)
 ```
 
 * Create index.js on the actions folder
@@ -393,118 +407,163 @@ class CartItem extends React.Component {
 export default CartItem
 ```
 
-
-
-## Second example
+## Third Part
 #### Topics
 
-* Dynamic Attr (states)
-* Forms
+* Actions deeply  
+* Reducer deeply
 
 #### Example
-* Last example, add the state to render the posts
+* Modify the index.js on the actions folder to validate the number of added on the cart
 
 ```js
-// 1. Inside constructor this.state = { posts: [] }
-// 2. Inside render const homePagePosts = this.state.posts
-// 3. Inside the Promise this.setState({posts: data})
-// 4. Remove props from index.js
-```
-* Create FormPage file
+const addToCartAction = product => ({
+  type: 'ADD_TO_CART',
+  product
+})
 
-```js
-import FormPage from './components/form/FormPage'
-```
-
-* Explanation about `defaultValue` and `value` for forms
-* Set the defaultValue for first inputs section
-
-```js
-this.state = {
-	billingName: 'Daniel',
-	shippingName: '',
-	sameAddress: false
+export const addToCart = product => (dispatch, getState) => {
+  if (product.quantity > 0) {
+      dispatch(addToCartAction(product))
+  }
 }
-// const { state } = this
-// defaultValue={state.billingName}
 ```
-
-* Update the checkbox, to set `sameAddress`
+* Add a reducer on the ProductReducer.js to handle the logic of the add an element
 
 ```js
-onChange={event => this.setState({ sameAddress: event.target.checked })}
-```
-
-* Set the `onChange` to update the inputs values
-
-```js
-onChange={event => this.setState({ billingName: event.target.value })}
-```
-
-* Set the values of the second inputs section
-
-```js
-value={state.sameAddress ? state.billingName : state.shippingName}
-```
-
-*  Serialize and send the data
-
-```js
-this.handleSubmit  = e => {
-	e.preventDefault()
-	const values = serializeForm(e.target, { hash: true })
-	console.log(values)
+const products = (state = [], action) => {
+	switch (action.type) {
+	    case 'ADD_TO_CART':
+	      return state.map(elem => {
+			  if (elem === action.product) {
+				// 	elem.quantity = elem.quantity - 1
+				// return elem
+				return Object.assign({}, elem , {quantity : elem.quantity - 1})
+			  }
+			  return elem
+		  })
+	    default:
+	      return state
+  }
 }
-// Add the button tag to form
-<button>click</button>
+
+export default products
 ```
-### Switch to first and second example
-#### Topics
 
-* Nested Components (instead of Inheritance)
-* Routing
+* Duplicate the ProductsContainer.js on the container folder and call it ProductsCartContainer.js
+* Rename all the class names of ProductsContainer to ProductsCartContainer on the ProductsCartContainer.js file
 
-#### Example
-* Create App (Layout) Page
+* Import the ProductsCartContainer.js on the App.js to display the already added on the Cart
 
 ```js
-class App extends React.Component {
-	render () {
-		return (
-			<div className="container">
-				{this.props.children}		
-			</div>
-		);
+import React from 'react'
+import ProductsContainer from './ProductsContainer'
+import ProductsCartContainer from './ProductsCartContainer'
+
+const App = () => (
+    <div className="panel-body">
+        <ProductsContainer/>
+        <hr/>
+        <ProductsCartContainer/>
+    </div>
+)
+
+export default App
+
+```
+
+* Change the element of the state that is displayed on the ProductsCartContainer.js
+
+```js
+const mapStateToProps = (state) => {
+    return {
+		products: state.cartProducts
 	}
 }
-export default App;
 ```
-* Render the HomePage inside the the new App wrapper
+
+* Add logic to modify the quantity of the object on the Cart. (CartReducer.js)
 
 ```js
-render(
-	<App>
-		<HomePage data={data} />
-	</App>,
-	document.getElementById('app')
-)
+const cartProducts = (state = [], action) => {
+	switch (action.type) {
+		case 'ADD_TO_CART':
+			const commentIndex = indexElemCart(state,action.product.id)
+
+		   if (commentIndex != -1) {
+				return Object.assign([], state, state[commentIndex].quantity = state[commentIndex].quantity + 1)
+		   } else {
+			   return [
+   					...state,
+   					Object.assign({}, action.product , {quantity : 1})
+   				]
+		   }
+
+		default:
+			return state
+	}
+}
+
+export default cartProducts
+
+const indexElemCart = (cartProducts,productId) => {
+	return cartProducts.findIndex(function(elem) {
+	   return elem.id == productId;
+   });
+}
+
 ```
-* Import the Header and the Footer on the App layout, then use them
+
+* Add the action to calculate the total of the cart on the index.js in the actions folder
 
 ```js
-import Header from './common/Header'
-import Footer from './common/Footer'
+export const totalCost = cartProducts => (dispatch,getState) => {
+    if (cartProducts.length == 0){
+		return 0
+	} else {
+		return cartProducts.reduce((acc, elem) => {
+			return acc + (elem.quantity * elem.price)
+		}, 0 )
+	}
+}
 ```
-* Let's create a Router, then we can access to HomePage and FormPage
+
+*  Modify the Footer.js
 
 ```js
-render(
-	<Router history={browserHistory}>
-		<Route path="/" component={App}>
-			<IndexRoute component={() => <HomePage data={data}/>}/>
-			<Route path="/form" component={FormPage}/>
-		</Route>
-	</Router>
-	,document.getElementById('app')
-)
+import React, { PropTypes } from 'react'
+import { connect } from 'react-redux'
+import { getTotalCost } from '../../actions';
+
+const Footer = ({ totalCost }) => {
+	return (
+		<div className="panel-footer">
+			<div className="row text-center">
+				<div className="col-sm-9">
+					<h4>Total
+						<strong>: $ {totalCost}</strong>
+					</h4>
+				</div>
+				<div className="col-sm-3">
+					<button type="button" className="btn btn-success btn-block">
+						Checkout
+					</button>
+				</div>
+			</div>
+		</div>
+	)
+}
+
+Footer.propTypes = {
+  totalCost : PropTypes.number.isRequired
+}
+
+const mapStateToProps = (state) => {
+    return {
+		totalCost: getTotalCost(state.cartProducts)()
+	}
+}
+
+export default connect(mapStateToProps)(Footer)
+
 ```

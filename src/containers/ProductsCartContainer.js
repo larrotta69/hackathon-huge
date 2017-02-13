@@ -4,19 +4,20 @@ import CartItem from '../components/CartItem'
 import { connect } from 'react-redux'
 import { addToCart } from '../actions';
 
-const ProductsContainer = ({ products, addToCart }) => (
+const ProductsCartContainer = ({ products, addToCart, totalCost }) => (
       <ProductsList title="Products">
         {products.map(product =>
         <CartItem
             key = {product.id}
             product = {product}
             onAddToCartClicked = {() => addToCart(product)}
+            totalCost = {totalCost}
         />
         )}
       </ProductsList>
 )
 
-ProductsContainer.propTypes = {
+ProductsCartContainer.propTypes = {
   products: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
@@ -30,8 +31,8 @@ ProductsContainer.propTypes = {
 
 const mapStateToProps = (state) => {
     return {
-		products: state.products
+		products: state.cartProducts
 	}
 }
 
-export default connect(mapStateToProps, {addToCart})(ProductsContainer)
+export default connect(mapStateToProps, {addToCart})(ProductsCartContainer)
