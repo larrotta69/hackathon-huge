@@ -4,155 +4,397 @@
 
 * Clone the repo `https://github.com/larrotta69/hackathon-huge.git`
 
-* Go to `huge-workshop` branch, run `git checkout huge-workshop-redux`
-* Go to `hackathon-huge`
+* Go to `huge-workshop-redux` branch, run `git checkout huge-workshop-redux`
+* Go to `huge-workshop-redux`
 * Run `npm install`
 * Then `npm start`
 * Webpack will open a new tab in your browser
-*  You'll see the "Welcome to React WorkShop"
+*  You'll see the "a shopping cart and a few items on the list."
 
-## First example
-#### Topics
+## First Part
 
-* Props	
-* Event Handlers
-* LiveCycle
+* Redux Packages
+* Create Store
+* Configure the current index.js
+* Create and modify the files to be prepared to handle the store
 
-#### Example
-* Render of the component inside the DOM
+## Example
+* Install the npm packages on your package.json. Open the console and go to the directory where you have the project and copy paste the next line
 
 ```js
-import React from 'react'
-import { render } from 'react-dom'
-import styles from './styles/main.scss'
-
-class HomePage extends React.Component {
-	render () {
-		return (
-			<section className="row">
-				<div className="col-md-9">
-					HomePage
-				</div>
-			</section>
-		);
-
-	}
-}
-
-render(
-	<HomePage />,
-	document.getElementById('app')
-)
+npm install --save redux redux-logger react-redux redux-thunk
 ```
-* Passing Props (Data) to component
+* Create this folders on the src folders
+⋅⋅* actions
+⋅⋅* reducers
+⋅⋅* containers
+⋅⋅* data
+
+* Create a file in data called data.js
 
 ```js
-const data = {
-	appTitle: "List of Posts",
-	posts: [
+export const productsData = {
+	"products": [
 		{
-			title: "1. sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-			body: "Bacon ipsum dolor amet meatloaf turducken alcatra doner cupim. Bresaola kevin landjaeger doner, cow leberkas ground round bacon pig frankfurter shank tenderloin beef ribs beef. Swine fatback kevin sirloin."
+			"id": 1,
+			"name": "Product 1",
+			"img": "http://placehold.it/100x70",
+			"desc": "Product description",
+			"price": 5,
+			"quantity": 5
 		},
 		{
-			title: "2. sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-			body: "Bacon ipsum dolor amet meatloaf turducken alcatra doner cupim. Bresaola kevin landjaeger doner, cow leberkas ground round bacon pig frankfurter shank tenderloin beef ribs beef. Swine fatback kevin sirloin."
+			"id": 2,
+			"name": "Product 2",
+			"img": "http://placehold.it/100x70",
+			"desc": "Product description 2",
+			"price": 29,
+			"quantity": 3
 		},
 		{
-			title: "3. sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-			body: "Bacon ipsum dolor amet meatloaf turducken alcatra doner cupim. Bresaola kevin landjaeger doner, cow leberkas ground round bacon pig frankfurter shank tenderloin beef ribs beef. Swine fatback kevin sirloin."
-		},
-		{
-			title: "4. sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-			body: "Bacon ipsum dolor amet meatloaf turducken alcatra doner cupim. Bresaola kevin landjaeger doner, cow leberkas ground round bacon pig frankfurter shank tenderloin beef ribs beef. Swine fatback kevin sirloin."
-		},
-		{
-			title: "5. sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-			body: "Bacon ipsum dolor amet meatloaf turducken alcatra doner cupim. Bresaola kevin landjaeger doner, cow leberkas ground round bacon pig frankfurter shank tenderloin beef ribs beef. Swine fatback kevin sirloin."
+			"id": 3,
+			"name": "Product 3",
+			"img": "http://placehold.it/100x70",
+			"desc": "Product description 3",
+			"price": 24,
+			"quantity": 1
 		}
 	]
 }
+```
+* Import the data on the index.js
 
-render(
-	<HomePage data={data} />,
-	document.getElementById('app')
+```js
+import { productsData } from './data/data'
+```
+
+* Remove the cartData object on the index.js
+
+```js
+const cartData = {
+	"cartItems": [
+		{
+			"name": "Product 1",
+			"img": "http://placehold.it/100x70",
+			"desc": "Product description",
+			"price": "5.00",
+			"quantity": 5
+		},
+		{
+			"name": "Product 2",
+			"img": "http://placehold.it/100x70",
+			"desc": "Product description 2",
+			"price": "29.00",
+			"quantity": 3
+		},
+		{
+			"name": "Product 3",
+			"img": "http://placehold.it/100x70",
+			"desc": "Product description 3",
+			"price": "24.00",
+			"quantity": 1
+		}
+	]
+}
+```
+
+* Change the name object that contains the data.
+
+```js
+	cartData.cartItems.map(...)
+	productsData.products.map(...)
+```
+
+* Move the App.js file that is currently on the components folder to the containers folder and add
+
+```js
+import React from 'react'
+import ProductsContainer from './ProductsContainer'
+
+class App extends React.Component {
+    render() {
+        return (
+            <div className="panel-body">
+                <ProductsContainer products={this.props.products} />
+            </div>
+        )
+    }
+}
+
+export default App
+```
+
+* Create ProductsContainer.js on the containers folder
+
+```js
+import React, { PropTypes } from 'react'
+import ProductsList from '../components/ProductsList'
+import CartItem from '../components/CartItem'
+
+class ProductsContainer extends React.Component {
+    render(){
+        const { products } = this.props
+
+        return (
+          <ProductsList title="Products">
+            {products.map(product =>
+            <CartItem
+                key={product.id}
+                product={product}
+            />
+            )}
+          </ProductsList>
+      )
+    }
+}
+
+ProductsContainer.propTypes = {
+  products: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    img : PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    quantity: PropTypes.number.isRequired,
+    desc: PropTypes.string.isRequired,
+  })).isRequired
+}
+
+export default ProductsContainer
+```
+* Create ProductsList.js on the components folder
+
+```js
+import React, { PropTypes } from 'react'
+
+const ProductsList = ({ title, children }) => (
+  <div>
+    <h3>{title}</h3>
+    <div>{children}</div>
+  </div>
+)
+
+ProductsList.propTypes = {
+  children: PropTypes.node,
+  title: PropTypes.string.isRequired
+}
+
+export default ProductsList
+```
+
+* Change the data to product on the CartItem
+
+```js
+const item = this.props.product
+```
+> we change the name of the data
+
+* Import the App.js and call it from index.js
+
+```js
+import App from './containers/App'
+
+return (
+	<div className="container">
+		<div className="row">
+			<div className="panel panel-info">
+				<Header/>
+					<App products = {productsData.products}/>
+				<Footer/>
+			</div>
+		</div>
+	</div>
 )
 ```
 
-* Create the `HomePage` file, iterate over props, then render a list 
+## Second Part
+* Create reducers
+* Create action
+* Remove all the props on the products flows
+* Render data from the store
+
+
+* Create ProductReducer.js on the reducers folder
 
 ```js
-class HomePage extends React.Component {
-	render () {
-		const homePagePosts = this.props.data.posts
-		console.log(homePagePosts)
-		return (
-			<section className="row">
-				<h1>{this.props.data.appTitle}</h1>
-				{homePagePosts.map((post, index) => {
-					return(
-						<div key={index} className="col-sm-12 col-xs-12 col-md-4 col-lg-3">
-							<div className="thumbnail bootsnipp-thumb">
-								<h4 className="list-group-item-heading">{post.title}</h4>
-								<p className="list-group-item-text">{post.body}</p>
-							</div>
-						</div>
-					)
-				})}
-			</section>
-		)
+const products = (state = [], action) => {
+	return state
+}
 
+export default products
+```
+
+* Create CartReducer.js on the reducers folder
+
+```js
+const cartProducts = (state = [], action) => {
+	return state
+}
+
+export default cartProducts
+```
+
+* Add this new lines on the index.js file
+
+```js
+import rootReducer from './reducers/index'
+import { createStore, applyMiddleware } from 'redux'
+import { Provider } from 'react-redux'
+import createLogger from 'redux-logger'
+import thunk from 'redux-thunk'
+
+
+const middleware = [ thunk ];
+if (process.env.NODE_ENV !== 'production') {
+  middleware.push(createLogger());
+}
+
+const defaultState = {
+	products: productsData.products,
+	cartProducts: []
+}
+
+const store = createStore(rootReducer, defaultState, applyMiddleware(...middleware))
+```
+
+* Create index.js on the actions folder
+
+```js
+export const addToCart = product => ({
+	type: 'ADD_TO_CART',
+	product
+})
+```
+
+* Add the first reducer on CartReducer.js
+
+```js
+const cartProducts = (state = [], action) => {
+	switch (action.type) {
+		case 'ADD_TO_CART':
+			return [
+				...state,
+				action.product
+			]
+
+		default:
+			return state
 	}
 }
 
-export default HomePage;
+export default cartProducts
 ```
-* Handling with events
+
+* Modify the App.js file and remove the props elements
 
 ```js
-randomColor(event){
-	const color = `rgb(${Math.floor(Math.random()*256)} , ${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)})`
-	event.target.setAttribute('style', `color: ${color}`)
-}
-<h4 className="list-group-item-heading" onClick={event => this.randomColor(event)}>
-	{post.title}
-</h4>
+import React from 'react'
+import ProductsContainer from './ProductsContainer'
+
+const App = () => (
+    <div className="panel-body">
+        <ProductsContainer/>
+    </div>
+)
+
+export default App
 ```
+
+* Modify the ProductsContainer.js file and remove the props elements and add the first action on the component
 
 ```js
-constructor(props){
-	super(props)
-	this.randomColor = this.randomColor.bind(this)
-}
-<h4 className="list-group-item-heading" onClick={this.randomColor}>
-	{post.title}
-</h4>
-```
-> Note the HotRealoading, isn't reloading the browser
+import React, { PropTypes } from 'react'
+import ProductsList from '../components/ProductsList'
+import CartItem from '../components/CartItem'
+import { connect } from 'react-redux'
+import { addToCart } from '../actions';
 
-* Explanation of LifeCycle
+const ProductsContainer = ({ products, addToCart }) => (
+      <ProductsList title="Products">
+        {products.map(product =>
+        <CartItem
+            key = {product.id}
+            product = {product}
+            onAddToCartClicked = {() => addToCart(product)}
+        />
+        )}
+      </ProductsList>
+)
+
+ProductsContainer.propTypes = {
+  products: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    img : PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    quantity: PropTypes.number.isRequired,
+    desc: PropTypes.string.isRequired,
+})).isRequired,
+  addToCart : PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state) => {
+    return {
+		products: state.products
+	}
+}
+
+export default connect(mapStateToProps, {addToCart})(ProductsContainer)
+
+```
+
+* Modify the CartItem.js file to add the onClick event to add the element on the cart
 
 ```js
-componentWillMount() {
-	console.log('Will Be Mounted, occurs before render()')
-}
-componentDidMount() {
-	console.log('Was Mounted, occurs after render()')
-}
-```
-* Fetching Data from API
+import React, { PropTypes } from 'react'
 
-```js
-componentWillMount(){
-	fetch('https://jsonplaceholder.typicode.com/posts')
-		.then(response => {
-			return response.json()
-		})
-		.then(data => {
-			console.log(data)
-		})
+class CartItem extends React.Component {
+	render(){
+		const item = this.props.product
+		const { onAddToCartClicked } = this.props
+		return (
+			<div className="row">
+				<div className="col-sm-6">
+					<div className="col-sm-6">
+						<img className="img-responsive" src={item.img}/>
+					</div>
+					<div className="col-sm-6">
+						<h4 className="product-name">
+							<strong>{item.name}</strong>
+						</h4>
+						<h4>
+							<small>{item.desc}</small>
+						</h4>
+					</div>
+				</div>
+
+
+				<div className="col-sm-6">
+					<div className="col-xs-3">
+						<h6>
+							<strong>${item.price}</strong>
+						</h6>
+					</div>
+					<div className="col-xs-3">
+						<h6>
+							<strong>Q: {item.quantity}</strong>
+						</h6>
+					</div>
+					<div className="col-xs-6">
+						<button type="button" className="btn btn-success btn-block" onClick={onAddToCartClicked}>
+							Add to cart
+						</button>
+					</div>
+				</div>
+			</div>
+		)
+	}
 }
+
+export default CartItem
 ```
+
+
+
 ## Second example
 #### Topics
 
@@ -185,7 +427,7 @@ this.state = {
 }
 // const { state } = this
 // defaultValue={state.billingName}
-``` 
+```
 
 * Update the checkbox, to set `sameAddress`
 
@@ -205,7 +447,7 @@ onChange={event => this.setState({ billingName: event.target.value })}
 value={state.sameAddress ? state.billingName : state.shippingName}
 ```
 
-*  Serialize and send the data 
+*  Serialize and send the data
 
 ```js
 this.handleSubmit  = e => {

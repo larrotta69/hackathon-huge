@@ -2,7 +2,8 @@ import React, { PropTypes } from 'react'
 
 class CartItem extends React.Component {
 	render(){
-		const item = this.props.data
+		const item = this.props.product
+		const { onAddToCartClicked } = this.props
 		return (
 			<div className="row">
 				<div className="col-sm-6">
@@ -32,7 +33,7 @@ class CartItem extends React.Component {
 						</h6>
 					</div>
 					<div className="col-xs-6">
-						<button type="button" className="btn btn-success btn-block">
+						<button type="button" className="btn btn-success btn-block" onClick={onAddToCartClicked}>
 							Add to cart
 						</button>
 					</div>

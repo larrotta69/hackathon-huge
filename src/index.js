@@ -2,57 +2,50 @@ import React from 'react'
 import { render } from 'react-dom'
 import styles from './styles/main.scss'
 
+import { productsData } from './data/data'
+
+import App from './containers/App'
+import rootReducer from './reducers/index'
+
+//redux
+import { createStore, applyMiddleware } from 'redux'
+import { Provider } from 'react-redux'
+import createLogger from 'redux-logger'
+import thunk from 'redux-thunk'
+
 import Header from './components/common/Header'
 import Footer from './components/common/Footer'
 import CartItem from './components/CartItem'
 
-const cartData = {
-	"cartItems": [
-		{
-			"name": "Product 1",
-			"img": "http://placehold.it/100x70",
-			"desc": "Product description",
-			"price": "5.00",
-			"quantity": 5
-		},
-		{
-			"name": "Product 2",
-			"img": "http://placehold.it/100x70",
-			"desc": "Product description 2",
-			"price": "29.00",
-			"quantity": 3
-		},
-		{
-			"name": "Product 3",
-			"img": "http://placehold.it/100x70",
-			"desc": "Product description 3",
-			"price": "24.00",
-			"quantity": 1
-		}
-	]
+const middleware = [ thunk ];
+if (process.env.NODE_ENV !== 'production') {
+  middleware.push(createLogger());
 }
+
+const defaultState = {
+	products: productsData.products,
+	cartProducts: []
+}
+
+const store = createStore(rootReducer,
+						  defaultState,
+						  applyMiddleware(...middleware)
+						)
 
 class ShoppingCart extends React.Component {
 	render() {
 		return (
-			<div className="container">
-				<div className="row">
-					<div className="panel panel-info">
-						<Header/>
-						<div className="panel-body">
-							{cartData.cartItems.map((item, index) => {
-								return(
-									<div key={index}>
-										<CartItem data={item}/>
-										<hr></hr>
-									</div>
-								)
-							})}
+			<Provider store={store}>
+				<div className="container">
+					<div className="row">
+						<div className="panel panel-info">
+							<Header/>
+								<App products = {productsData.products}/>
+							<Footer/>
 						</div>
-						<Footer/>
 					</div>
 				</div>
-			</div>
+			</Provider>
 		)
 	}
 }
