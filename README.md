@@ -19,18 +19,24 @@
 * Create and modify the files to be prepared to handle the store
 
 ## Example
-* Install the npm packages on your package.json. Open the console and go to the directory where you have the project and copy paste the next line
+* Install the npm packages. Open the console and go to the directory where you have the project and copy paste the next line
 
 ```js
 npm install --save redux redux-logger react-redux redux-thunk
 ```
-* Create this folders on the src folders
-⋅⋅* actions
-⋅⋅* reducers
-⋅⋅* containers
-⋅⋅* data
+* Go to `/src`  folder, then create those folders
 
-* Create a file in data called data.js
+	* actions
+	* reducers
+	* containers
+	* data
+
+```
+mkdir actions reducers containers data
+touch actions/index.js reducers/ProductReducer.js reducers/CartReducer.js reducers/index.js containers/ProductsCartContainer.js containers/ProductsContainer.js data/data.js
+```
+
+* Inside `/data/data.js`
 
 ```js
 export const productsData = {
@@ -124,7 +130,7 @@ class App extends React.Component {
 export default App
 ```
 
-* Create ProductsContainer.js on the containers folder
+* On `containers/ProductsContainer.js`
 
 ```js
 import React, { PropTypes } from 'react'
@@ -161,7 +167,7 @@ ProductsContainer.propTypes = {
 
 export default ProductsContainer
 ```
-* Create ProductsList.js on the components folder
+* On `components/ProductsList.js `
 
 ```js
 import React, { PropTypes } from 'react'
@@ -211,10 +217,10 @@ return (
 #### Topics
 * Create reducers
 * Create action
-* Remove all the props on the products flows
+* Remove all the props on products flows
 * Render data from the store
 
-* Create ProductReducer.js on the reducers folder
+* On`reducers/ProductReducer.js`
 
 ```js
 const products = (state = [], action) => {
@@ -224,7 +230,7 @@ const products = (state = [], action) => {
 export default products
 ```
 
-* Create CartReducer.js on the reducers folder
+* On`reducers/CartReducer.js`
 
 ```js
 const cartProducts = (state = [], action) => {
@@ -232,6 +238,18 @@ const cartProducts = (state = [], action) => {
 }
 
 export default cartProducts
+```
+
+* On `reducers/index.js`
+
+```js
+import { combineReducers } from 'redux'
+import products from './ProductReducer'
+import cartProducts from './CartReducer'
+
+const rootReducer = combineReducers({products, cartProducts})
+
+export default rootReducer
 ```
 
 * Add this new lines on the index.js
@@ -258,15 +276,17 @@ const store = createStore(rootReducer, defaultState, applyMiddleware(...middlewa
 
 
 return (
-	<div className="container">
-		<div className="row">
-			<div className="panel panel-info">
-				<Header/>
+	<Provider store={store}>
+		<div className="container">
+			<div className="row">
+				<div className="panel panel-info">
+					<Header/>
 					<App/>
-				<Footer/>
+					<Footer/>
+				</div>
 			</div>
 		</div>
-	</div>
+	</Provider>
 )
 ```
 
@@ -313,14 +333,14 @@ const App = () => (
 export default App
 ```
 
-* Modify the ProductsContainer.js file and remove the props elements and add the first action on the component
+* Modify the `ProductsContainer.js` file and remove the props elements and add the first action on the component
 
 ```js
 import React, { PropTypes } from 'react'
 import ProductsList from '../components/ProductsList'
 import CartItem from '../components/CartItem'
 import { connect } from 'react-redux'
-import { addToCart } from '../actions';
+import { addToCart } from '../actions'
 
 const ProductsContainer = ({ products, addToCart }) => (
       <ProductsList title="Products">
@@ -359,52 +379,10 @@ export default connect(mapStateToProps, {addToCart})(ProductsContainer)
 * Modify the CartItem.js file to add the onClick event to add the element on the cart
 
 ```js
-import React, { PropTypes } from 'react'
+<button type="button" className="btn btn-success btn-block" onClick={onAddToCartClicked}>
+	Add to cart
+</button>
 
-class CartItem extends React.Component {
-	render(){
-		const item = this.props.product
-		const { onAddToCartClicked } = this.props
-		return (
-			<div className="row">
-				<div className="col-sm-6">
-					<div className="col-sm-6">
-						<img className="img-responsive" src={item.img}/>
-					</div>
-					<div className="col-sm-6">
-						<h4 className="product-name">
-							<strong>{item.name}</strong>
-						</h4>
-						<h4>
-							<small>{item.desc}</small>
-						</h4>
-					</div>
-				</div>
-
-
-				<div className="col-sm-6">
-					<div className="col-xs-3">
-						<h6>
-							<strong>${item.price}</strong>
-						</h6>
-					</div>
-					<div className="col-xs-3">
-						<h6>
-							<strong>Q: {item.quantity}</strong>
-						</h6>
-					</div>
-					<div className="col-xs-6">
-						<button type="button" className="btn btn-success btn-block" onClick={onAddToCartClicked}>
-							Add to cart
-						</button>
-					</div>
-				</div>
-			</div>
-		)
-	}
-}
-
-export default CartItem
 ```
 
 ## Third Part
@@ -414,7 +392,7 @@ export default CartItem
 * Reducer deeply
 
 #### Example
-* Modify the index.js on the actions folder to validate the number of added on the cart
+* Modify the `index.js` on the actions folder to validate the number of added on the cart
 
 ```js
 const addToCartAction = product => ({
@@ -428,7 +406,7 @@ export const addToCart = product => (dispatch, getState) => {
   }
 }
 ```
-* Add a reducer on the ProductReducer.js to handle the logic of the add an element
+* Add a reducer on the `ProductReducer.js` to handle the logic of the add an element
 
 ```js
 const products = (state = [], action) => {
@@ -450,7 +428,8 @@ const products = (state = [], action) => {
 export default products
 ```
 
-* Duplicate the ProductsContainer.js on the container folder and call it ProductsCartContainer.js
+* Copy `ProductsContainer.js` inside `ProductsCartContainer.js`
+
 * Rename all the class names of ProductsContainer to ProductsCartContainer on the ProductsCartContainer.js file
 
 * Import the ProductsCartContainer.js on the App.js to display the already added on the Cart
@@ -517,7 +496,7 @@ const indexElemCart = (cartProducts,productId) => {
 * Add the action to calculate the total of the cart on the index.js in the actions folder
 
 ```js
-export const totalCost = cartProducts => (dispatch,getState) => {
+export const getTotalCost = cartProducts => (dispatch,getState) => {
     if (cartProducts.length == 0){
 		return 0
 	} else {
