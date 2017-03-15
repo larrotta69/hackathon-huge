@@ -1,34 +1,13 @@
 import React from 'react';
-import PostsList from './../posts/PostsList';
 
-class HomePage extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = { posts: [] };
-	}
-
-	componentWillMount(){
-		fetch('https://jsonplaceholder.typicode.com/posts')
-			.then(response => {
-				return response.json();
-			})
-			.then(data => {
-				this.setState({posts: data});
-			});
-	}
-
-	render () {
-		const homePageData = this.state.posts;
-
-		return (
-			<section className="row">
-				<div className="col-md-9">
-					<PostsList posts={homePageData}/>
-				</div>
-			</section>
-		);
-
-	}
-}
+const HomePage = (props) => {
+	return (
+		<section className="row">
+			<div className="col-md-9">
+				<h1>Let's make Whatsapp</h1>
+			</div>
+		</section>
+	);
+};
 
 export default HomePage;
