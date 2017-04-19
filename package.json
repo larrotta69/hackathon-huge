@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "babel-node tools/srcServer.js",
+    "build": "babel-node ./node_modules/webpack/bin/webpack.js webpack.config.js -p",
     "lint": "node_modules/.bin/esw webpack.config.* src tools",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "babel-polyfill": "6.8.0",
     "bootstrap": "3.3.6",
+    "extract-text-webpack-plugin": "^1.0.1",
     "jquery": "2.2.3",
     "react": "15.0.2",
     "react-dom": "15.0.2",
@@ -18,6 +20,7 @@
     "toastr": "2.1.2"
   },
   "devDependencies": {
+    "autoprefixer": "^6.6.1",
     "babel-cli": "6.8.0",
     "babel-core": "6.8.0",
     "babel-loader": "6.2.4",
